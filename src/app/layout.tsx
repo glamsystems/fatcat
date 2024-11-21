@@ -1,13 +1,13 @@
 import { ThemeProviderWrapper } from "../providers/themeProvider";
 import { WalletAdapterProvider } from "../providers/walletAdapterProvider";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 import "./globals.css";
 import { UmiProvider } from "../providers/umiProvider";
 import { cn } from "../lib/utils";
 import {PersistentWarning} from "../components/persistent-warning";
+import { GeistSans } from 'geist/font/sans';
+import { GeistMono } from 'geist/font/mono';
 
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
     title: "FatCat",
@@ -26,7 +26,7 @@ export default function RootLayout({
         </head>
         <body
             className={cn(
-                inter.className,
+                GeistSans.className,
                 "min-h-screen bg-background antialiased"
             )}
         >
