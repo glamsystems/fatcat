@@ -30,8 +30,8 @@ export default function Home() {
         >
             <Header />
             <main className="flex-grow flex flex-col items-center justify-start p-4 sm:p-8 md:p-8 lg:p-4">
-                <div className="flex flex-col items-center justify-center space-y-8 md:space-y-2 max-w-6xl w-full">
-                    <h1 className="text-2xl sm:text-3xl md:text-4xl text-center opacity-90">Welcome to FatCat</h1>
+                <div className="flex flex-col items-center justify-center space-y-8 md:space-y-4 max-w-6xl w-full">
+                    {/*<h1 className="text-2xl sm:text-3xl md:text-4xl text-center opacity-90">Welcome to FatCat</h1>*/}
                     <div className="relative w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-2/5 2xl:w-2/3 aspect-video overflow-hidden">
                         <motion.div
                             className="absolute inset-0"
