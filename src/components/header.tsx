@@ -18,7 +18,7 @@ const Header = () => {
             >
                 <Link href="/">
                     <h1 className="text-3xl font-light text-muted-foreground">
-                        FatCat
+                        =^.^=
                     </h1>
                 </Link>
                 <div className="flex items-center gap-4">

@@ -27,7 +27,7 @@ export default function DelegateForm() {
                     required
                 />
             </div>
-            <Button type="submit" className="w-full">Delegate</Button>
+            <Button type="submit" className="w-full text-foreground dark:text-background">Delegate</Button>
         </form>
     )
 }

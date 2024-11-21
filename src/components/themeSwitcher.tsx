@@ -6,41 +6,36 @@ import { useEffect, useState } from "react";
 import { Button } from "./ui/button"
 
 const ThemeSwitcher = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  // Wait for mount to avoid hydration mismatch
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Don't render anything until mounted
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', resolvedTheme === 'dark');
+  }, [resolvedTheme]);
+
   if (!mounted) {
     return null;
   }
 
-  // Now we can safely check the theme
-  const currentTheme =
-      theme === "system"
-          ? window.matchMedia("(prefers-color-scheme: dark)").matches
-              ? "dark"
-              : "light"
-          : theme;
-
   return (
-        <Button
-            size="icon"
-            className="h-12 w-12 rounded"
-            onClick={() => setTheme(currentTheme === "light" ? "dark" : "light")}
-            aria-label={`Switch to ${currentTheme === "light" ? "dark" : "light"} theme`}
-        >
-          {currentTheme === "light" ? (
-              <MoonIcon />
-          ) : (
-              <SunIcon />
-          )}
-        </Button>
+      <Button
+          size="icon"
+          className="h-12 w-12 rounded text-foreground dark:text-background"
+          onClick={() => setTheme(resolvedTheme === "light" ? "dark" : "light")}
+          aria-label={`Switch to ${resolvedTheme === "light" ? "dark" : "light"} theme`}
+      >
+        {resolvedTheme === "light" ? (
+            <MoonIcon className="h-6 w-6" />
+        ) : (
+            <SunIcon className="h-6 w-6" />
+        )}
+      </Button>
   );
 };
 
 export default ThemeSwitcher;
+

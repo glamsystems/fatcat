@@ -6,8 +6,6 @@ import { UmiProvider } from "../providers/umiProvider";
 import { cn } from "../lib/utils";
 import {PersistentWarning} from "../components/persistent-warning";
 import { GeistSans } from 'geist/font/sans';
-import { GeistMono } from 'geist/font/mono';
-
 
 export const metadata: Metadata = {
     title: "FatCat",
