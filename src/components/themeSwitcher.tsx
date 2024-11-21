@@ -1,6 +1,6 @@
 "use client";
 
-import { MoonIcon, SunIcon } from "@heroicons/react/24/solid";
+import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button"
@@ -24,7 +24,8 @@ const ThemeSwitcher = () => {
   return (
       <Button
           size="icon"
-          className="h-12 w-12 rounded text-foreground dark:text-background"
+          variant="outline"
+          className="h-12 w-12 rounded"
           onClick={() => setTheme(resolvedTheme === "light" ? "dark" : "light")}
           aria-label={`Switch to ${resolvedTheme === "light" ? "dark" : "light"} theme`}
       >

@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import ThemeSwitcher from "./themeSwitcher";
 import Link from 'next/link'
+import {Button} from "@/components/ui/button";
 
 const WalletMultiButtonDynamic = dynamic(
     async () =>
@@ -23,6 +24,11 @@ const Header = () => {
                 </Link>
                 <div className="flex items-center gap-4">
                     <WalletMultiButtonDynamic />
+                    <Button className="w-12 h-12 rounded" variant="outline">
+                        <Link href="https://x.com/fatcatvote" target="_blank">
+                            @
+                        </Link>
+                    </Button>
                     <ThemeSwitcher />
                 </div>
             </div>
