@@ -7,6 +7,7 @@ import { cn } from "../lib/utils";
 import {PersistentWarning} from "../components/persistent-warning";
 import { GeistSans } from 'geist/font/sans';
 
+
 export const metadata: Metadata = {
     title: "FatCat",
     description: "Jupiter Governance Vote Automation.",
