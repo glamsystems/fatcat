@@ -24,11 +24,11 @@ const Header = () => {
                 </Link>
                 <div className="flex items-center gap-4">
                     <WalletMultiButtonDynamic />
-                    <Button className="w-12 h-12 rounded" variant="outline">
                         <Link href="https://x.com/fatcatvote" target="_blank">
+                            <Button className="w-12 h-12 rounded" variant="outline">
                             @
+                            </Button>
                         </Link>
-                    </Button>
                     <ThemeSwitcher />
                 </div>
             </div>
