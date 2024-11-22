@@ -29,17 +29,17 @@ export function PersistentWarning() {
 
     return (
         <>
-            <Card className="fixed rounded bottom-4 right-4 z-50 p-4 shadow-lg border-muted bg-muted max-w-sm">
+            <Card className="fixed rounded bottom-4 right-4 z-50 p-4 shadow-lg border-muted max-w-sm">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                     <div className="flex items-center space-x-2">
-                        <BeakerIcon className="h-6 w-6 text-destructive flex-shrink-0" />
+                        {/*<BeakerIcon className="h-6 w-6 text-destructive flex-shrink-0" />*/}
                         <div>
                             <p className="font-medium">Unaudited Beta</p>
                             <p className="text-sm hidden sm:block">Use at your own risk.</p>
                         </div>
                     </div>
                     <Button
-                        variant="destructive"
+                        variant="outline"
                         size="sm"
                         onClick={() => setIsDialogOpen(true)}
                         className="w-full sm:w-auto mt-2 sm:mt-0"
