@@ -70,7 +70,7 @@ export function PersistentWarning() {
                             <section className="mb-6"><h2 className="text-lg font-semibold mb-2">2. Active Development Notice</h2><p>GLAM is currently under <strong>active development</strong>. Features may change without notice, and <strong>breaking changes</strong> could occur. The software may not function as intended.</p></section>
                             <section className="mb-6"><h2 className="text-lg font-semibold mb-2">3. Use at Your Own Risk</h2>
                                 <ul className="list-disc pl-6">
-                                    <li>GLAM is provided on an "<strong>as is</strong>" and "<strong>as available</strong>" basis <strong>without warranties of any kind</strong>, either express or implied.</li>
+                                    <li>GLAM is provided on an &quot;as is&quot; and &quot;as available&quot; basis <strong>without warranties of any kind</strong>, either express or implied.</li>
                                     <li><strong>You assume all risks</strong> associated with using GLAM.</li>
                                     <li>We <strong>strongly recommend</strong> not storing significant amounts of cryptoassets on the platform during the beta phase.</li>
                                 </ul>
@@ -83,7 +83,7 @@ export function PersistentWarning() {
                                 </ul>
                             </section>
                             <section className="mb-6"><h2 className="text-lg font-semibold mb-2">5. Limitation of Liability</h2><p>GLAM <strong>shall not be liable</strong> for any direct, indirect, incidental, consequential, or exemplary damages arising from the use or inability to use GLAM. This includes, but is not limited to, loss of cryptoassets, data loss, or security breaches.</p></section>
-                            <section className="mb-6"><h2 className="text-lg font-semibold mb-2">6. No Warranties</h2><p>GLAM makes <strong>no warranties or representations</strong> about the accuracy or completeness of GLAM's content or the content of any services linked to any GLAM component. We do not warrant that:</p>
+                            <section className="mb-6"><h2 className="text-lg font-semibold mb-2">6. No Warranties</h2><p>GLAM makes <strong>no warranties or representations</strong> about the accuracy or completeness of GLAM&apos;s content or the content of any services linked to any GLAM component. We do not warrant that:</p>
                                 <ul className="list-disc pl-6">
                                     <li>GLAM will meet your requirements.</li>
                                     <li>GLAM will be uninterrupted, timely, secure, or error-free.</li>
