@@ -5,11 +5,11 @@ import Link from 'next/link'
 import { useWallet } from '@solana/wallet-adapter-react'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import Header from '../components/header'
+import Header from '@/components/header'
 import { motion } from "framer-motion"
-import { Button } from "../components/ui/button"
-import { FaqDialog } from "../components/faq-dialog"
-import {AnimatedNumber} from "../components/animated-number";
+import { Button } from "@/components/ui/button"
+import { FaqDialog } from "@/components/faq-dialog"
+import {AnimatedNumber} from "@/components/animated-number";
 
 export default function Home() {
     const { connected } = useWallet()
@@ -29,7 +29,7 @@ export default function Home() {
             transition={{ duration: 0.5, ease: "linear" }}
         >
             <Header />
-            <main className="flex-grow flex flex-col items-center justify-start p-4 sm:p-8 md:p-8 lg:p-4">
+            <main className="flex-grow flex flex-col items-center justify-start p-4 sm:p-8 md:p-8 lg:p-4 mt-24 md:mt-32">
                 <div className="flex flex-col items-center justify-center space-y-8 md:space-y-4 max-w-6xl w-full">
                     {/*<h1 className="text-2xl sm:text-3xl md:text-4xl text-center opacity-90">Welcome to FatCat</h1>*/}
                     <div className="relative w-full sm:w-3/4 md:w-2/3 lg:w-1/2 xl:w-2/5 2xl:w-2/3 aspect-video overflow-hidden">
@@ -66,7 +66,7 @@ export default function Home() {
 
                         </div>
                     </div>
-                    <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full justify-center pb-32 sm:pb-4">
+                    <div className="flex flex-col sm:flex-row gap-4 mt-8 w-full justify-center pb-24 sm:pb-4">
                         <Link href="https://github.com/glamsystems/fatcat" passHref target="_blank" rel="noopener noreferrer" className="w-full order-2 sm:order-1">
                             <Button variant="ghost" className="opacity-80 hover:opacity-100 transition-opacity w-full">
                                 View the Code

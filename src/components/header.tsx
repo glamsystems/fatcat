@@ -13,7 +13,7 @@ const WalletMultiButtonDynamic = dynamic(
 
 const Header = () => {
     return (
-        <header className="w-full"
+        <header className="w-full fixed bg-gradient-to-t from-transparent to-background z-50"
         >
             <div className="max-w-5xl mx-auto px-4 py-12 md:py-10 flex items-center justify-between"
             >

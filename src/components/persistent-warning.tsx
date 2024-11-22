@@ -128,6 +128,7 @@ export function PersistentWarning() {
                                     accuracy, completeness, or reliability of any third-party content. Users should exercise caution and critical thinking when interpreting such information.</p><h3 className="text-md font-semibold mb-2">Regulatory Compliance</h3><p className="mb-4">Users are responsible for ensuring their use of GLAM complies with all applicable laws and regulations in their jurisdiction. Cryptoasset regulations vary by country and are subject to change. GLAM does not guarantee the legality of its services in all jurisdictions.</p><h3 className="text-md font-semibold mb-2">Consultation Recommendation</h3><p className="mb-4">Given the complex nature of cryptoassets and the potential risks involved, we strongly recommend that users consult with qualified professionals, including legal and tax advisors, before making any decisions based on the information provided by GLAM.</p></section>
                         </div>
                     </div>
+
                     <DialogFooter>
                         <Button
                             type="button"

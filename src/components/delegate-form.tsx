@@ -1,33 +1,176 @@
 'use client'
 
-import { useState } from 'react'
-import { Button } from './ui/button'
-import { Input } from './ui/input'
-import { Label } from './ui/label'
+import { useState, useEffect } from 'react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import Link from 'next/link'
+
+interface UnstakeItem {
+    amount: string;
+    endTime: number;
+}
 
 export default function DelegateForm() {
-    const [amount, setAmount] = useState('')
+    const [stakeAmount, setStakeAmount] = useState<string>('0.00')
+    const [unstakeAmount, setUnstakeAmount] = useState<string>('0.00')
+    const [unstakeItems, setUnstakeItems] = useState<UnstakeItem[]>([])
+    const [now, setNow] = useState(Date.now())
 
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault()
-        // TODO: Implement delegation logic
-        console.log('Delegating:', amount)
+    useEffect(() => {
+        const timer = setInterval(() => setNow(Date.now()), 1000);
+        return () => clearInterval(timer);
+    }, []);
+
+    const handleMaxClick = (type: 'stake' | 'unstake') => {
+        if (type === 'stake') setStakeAmount('100.00')
+        else setUnstakeAmount('50.00')
+    }
+
+    const handleHalfClick = (type: 'stake' | 'unstake') => {
+        if (type === 'stake') setStakeAmount('50.00')
+        else setUnstakeAmount('25.00')
+    }
+
+    const handleUnstake = () => {
+        if (parseFloat(unstakeAmount) > 0) {
+            setUnstakeItems([...unstakeItems, {
+                amount: unstakeAmount,
+                endTime: Date.now() + 10 * 1000 // 10 seconds for testing
+            }]);
+            setUnstakeAmount('0.00');
+        }
+    }
+
+    const handleCancelUnstake = (index: number) => {
+        setUnstakeItems(unstakeItems.filter((_, i) => i !== index));
+    }
+
+    const formatCountdown = (endTime: number) => {
+        const diff = Math.max(0, endTime - now);
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        return `${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
     }
 
     return (
-        <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md">
-            <div>
-                <Label htmlFor="amount">Amount to Delegate</Label>
-                <Input
-                    id="amount"
-                    type="number"
-                    value={amount}
-                    onChange={(e) => setAmount(e.target.value)}
-                    placeholder="Enter amount"
-                    required
-                />
-            </div>
-            <Button type="submit" className="w-full text-foreground dark:text-background">Delegate</Button>
-        </form>
+        <div className="w-full max-w-xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+            <Card className="bg-card text-card-foreground p-4 sm:p-6 rounded border-muted">
+                <CardHeader>
+                    <CardTitle className="text-2xl">Votes on Autopilot</CardTitle>
+                    <CardDescription>
+                        <span className="text-2xl font-medium">0</span>
+                    </CardDescription>
+                    <CardDescription>
+                        Lock JUP tokens to receive your voting power.{' '}
+                        <Link href="#" className="underline hover:text-primary">
+                            Learn more
+                        </Link>
+                    </CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <Tabs defaultValue="stake" className="w-full">
+                        <TabsList className="grid w-full grid-cols-3 mb-4">
+                            <TabsTrigger value="stake">Stake</TabsTrigger>
+                            <TabsTrigger value="unstake">Unstake</TabsTrigger>
+                            <TabsTrigger value="claim">Claim</TabsTrigger>
+                        </TabsList>
+                        <div className="h-[200px]">
+                            <TabsContent value="stake" className="h-full">
+                                <div className="space-y-4 h-full flex flex-col justify-between">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="stake-amount">JUP</Label>
+                                        <div className="flex justify-end space-x-2">
+                                            <Button variant="outline" size="sm" onClick={() => handleHalfClick('stake')}>
+                                                HALF
+                                            </Button>
+                                            <Button variant="outline" size="sm" onClick={() => handleMaxClick('stake')}>
+                                                MAX
+                                            </Button>
+                                        </div>
+                                        <Input
+                                            id="stake-amount"
+                                            type="text"
+                                            value={stakeAmount}
+                                            onChange={(e) => setStakeAmount(e.target.value)}
+                                            className="text-right text-xl sm:text-2xl"
+                                        />
+                                    </div>
+                                    <Button className="w-full py-2 sm:py-3 text-foreground dark:text-background" disabled={parseFloat(stakeAmount) <= 0}>
+                                        {parseFloat(stakeAmount) <= 0 ? 'Insufficient JUP' : 'Stake'}
+                                    </Button>
+                                </div>
+                            </TabsContent>
+                            <TabsContent value="unstake" className="h-full">
+                                <div className="space-y-4 h-full flex flex-col justify-between">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="unstake-amount">Staked JUP</Label>
+                                        <div className="flex justify-end space-x-2">
+                                            <Button variant="outline" size="sm" onClick={() => handleHalfClick('unstake')}>
+                                                HALF
+                                            </Button>
+                                            <Button variant="outline" size="sm" onClick={() => handleMaxClick('unstake')}>
+                                                MAX
+                                            </Button>
+                                        </div>
+                                        <Input
+                                            id="unstake-amount"
+                                            type="text"
+                                            value={unstakeAmount}
+                                            onChange={(e) => setUnstakeAmount(e.target.value)}
+                                            className="text-right text-xl sm:text-2xl"
+                                        />
+                                    </div>
+                                    <Button className="w-full py-2 sm:py-3 text-foreground dark:text-background" onClick={handleUnstake} disabled={parseFloat(unstakeAmount) <= 0}>
+                                        Unstake
+                                    </Button>
+                                </div>
+                            </TabsContent>
+                            <TabsContent value="claim" className="h-full">
+                                <div className="space-y-4 h-full flex flex-col justify-between">
+                                    <div className="space-y-2">
+                                        <Label>Claimable JUP</Label>
+                                        <div className="relative">
+                                            <ScrollArea className="h-[210px] w-full rounded p-4">
+                                                {unstakeItems.length === 0 ? (<p className="text-center text-muted-foreground">No unstaking in progress</p>) : (unstakeItems.map((item, index) => (<div key={index} className="rounded mb-2 last:mb-0">
+                                                            <div className="flex justify-between items-center">
+                                                                <span className="text-sm sm:text-base">{item.amount} JUP</span>
+                                                                {now < item.endTime ? (<>
+                                                                        <span className="text-sm sm:text-base font-mono text-lime-500 dark:text-primary">
+                                                                            {formatCountdown(item.endTime)}
+                                                                        </span>
+                                                                        <Button
+                                                                            variant="outline"
+                                                                            size="sm"
+                                                                            onClick={() => handleCancelUnstake(index)}
+                                                                        >
+                                                                            Cancel
+                                                                        </Button>
+                                                                    </>) : (<Button
+                                                                        size="sm"
+                                                                        className="text-foreground dark:text-background"
+                                                                    >
+                                                                        Withdraw
+                                                                    </Button>)}
+                                                            </div>
+                                                        </div>)))}
+                                            </ScrollArea>
+                                            <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-card to-transparent pointer-events-none"></div>
+                                            <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-card to-transparent pointer-events-none"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </TabsContent>
+                        </div>
+                    </Tabs>
+                </CardContent>
+            </Card>
+        </div>
     )
 }
+
