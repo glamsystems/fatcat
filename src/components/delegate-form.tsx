@@ -79,7 +79,7 @@ export default function DelegateForm() {
                     </CardDescription>
                     <CardDescription>
                         Lock JUP tokens to receive your voting power.{' '}
-                        <Link href="#" className="underline hover:text-primary">
+                        <Link href="https://www.jupresear.ch/t/dao-x-vote-faq/7418" target="_blank" className="underline hover:text-primary">
                             Learn more
                         </Link>
                     </CardDescription>
