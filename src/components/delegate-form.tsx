@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import Link from 'next/link'
 
-const UNSTAKE_COUNTDOWN_TIME = 100000 * 1000; // 10 seconds for testing
+const UNSTAKE_COUNTDOWN_TIME = 30 * 24 * 60 * 60 * 1000; // 30 days in milliseconds
 
 interface UnstakeItem {
     amount: string;
