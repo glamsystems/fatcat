@@ -6,6 +6,7 @@ import { UmiProvider } from "../providers/umiProvider";
 import { cn } from "../lib/utils";
 import {PersistentWarning} from "../components/persistent-warning";
 import { GeistSans } from 'geist/font/sans';
+import { Analytics } from "@vercel/analytics/react"
 
 
 export const metadata: Metadata = {
@@ -40,6 +41,7 @@ export default function RootLayout({
         <body
             className={cn(GeistSans.className, "min-h-screen bg-background antialiased")}
         >
+        <Analytics/>
         <WalletAdapterProvider>
             <UmiProvider>
                 <ThemeProviderWrapper
