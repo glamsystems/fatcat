@@ -116,87 +116,81 @@ export default function VoteList() {
                     </ToggleGroup>
                     <ScrollArea className="h-[240px] w-full rounded">
                         <div className="pb-20">
-                            {filteredProposals.length === 0 ? (
-                                <p className="text-center text-muted-foreground">No proposals available</p>
-                            ) : (
-                                filteredProposals.map((proposal) => {
-                                    const status = getProposalStatus(proposal.activatedAt, proposal.votingEndsAt);
-                                    return (
-                                        <div key={proposal.key} className="mb-2 p-3 bg-accent rounded-lg">
-                                            <div className="flex items-center justify-between gap-x-4">
-                                                <div className="flex-1 min-w-0">
-                                                    <TooltipProvider>
-                                                        <Tooltip>
-                                                            <TooltipTrigger className="w-full">
-                                                                <h3 className="font-semibold max-w-48 text-base truncate text-left mt-2">
-                                                                    {proposal.title}
-                                                                </h3>
-                                                            </TooltipTrigger>
-                                                            <TooltipContent
-                                                                side="top"
-                                                                className="bg-background border text-foreground border-border"
-                                                            >
-                                                                <p className="text-sm">{proposal.title}</p>
-                                                            </TooltipContent>
-                                                        </Tooltip>
-                                                    </TooltipProvider>
-                                                </div>
-                                                <div className="flex items-center gap-x-2">
-                                                    <TooltipProvider>
-                                                        <Tooltip>
-                                                            <TooltipTrigger>
-                                                                <Badge
-                                                                    variant={getBadgeVariant(status)}
-                                                                    className={`text-xs h-6 rounded-full shadow-none pointer-events-none ${
-                                                                        getBadgeVariant(status) === 'default' ? 'text-foreground dark:text-background' : ''
-                                                                    }`}
-                                                                >
-                                                                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                                                                </Badge>
-                                                            </TooltipTrigger>
-                                                            <TooltipContent className="bg-background border text-foreground border-border">
-                                                                <p className="text-xs">
-                                                                    <span className="font-bold">Start:</span>{' '}
-                                                                    {formatDate(proposal.activatedAt)}
-                                                                </p>
-                                                                <p className="text-xs">
-                                                                    <span className="font-bold">End:</span>{' '}
-                                                                    {formatDate(proposal.votingEndsAt)}
-                                                                </p>
-                                                            </TooltipContent>
-                                                        </Tooltip>
-                                                    </TooltipProvider>
-                                                    <Link href={proposal.link} target="_blank">
-                                                        <Button
-                                                            variant="default"
-                                                            size="sm"
-                                                            className="bg-background hover:bg-muted text-foreground text-xs h-8 px-2 shadow-none"
-                                                        >
-                                                            View Details
-                                                        </Button>
-                                                    </Link>
-                                                    <TooltipProvider>
-                                                        <Tooltip>
-                                                            <TooltipTrigger>
-                                                                <EllipsisHorizontalIcon className="h-5 w-5 text-muted-foreground flex-shrink-0"/>
-                                                            </TooltipTrigger>
-                                                            <TooltipContent className="bg-background text-foreground border border-border">
-                                                                Not voted yet
-                                                            </TooltipContent>
-                                                        </Tooltip>
-                                                    </TooltipProvider>
-                                                </div>
-                                            </div>
+                            {filteredProposals.length === 0 ? (<p className="text-center text-muted-foreground">No proposals available</p>) : (filteredProposals.map((proposal) => {
+                                const status = getProposalStatus(proposal.activatedAt, proposal.votingEndsAt);
+                                return (<div key={proposal.key} className="mb-2 p-3 bg-accent rounded-lg">
+                                    <div className="flex items-center justify-between gap-x-4">
+                                        <div className="flex-1 min-w-0">
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger className="w-full">
+                                                        <h3 className="font-semibold max-w-48 text-base truncate text-left mt-2">
+                                                            {proposal.title}
+                                                        </h3>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent
+                                                        side="top"
+                                                        className="bg-background border text-foreground border-border"
+                                                    >
+                                                        <p className="text-sm">{proposal.title}</p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
                                         </div>
-                                    );
-                                })
-                            )}
+                                        <div className="flex items-center gap-x-2">
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger>
+                                                        <Badge
+                                                            variant={getBadgeVariant(status)}
+                                                            className={`text-xs h-6 rounded-full shadow-none pointer-events-none ${getBadgeVariant(status) === 'default' ? 'text-foreground dark:text-background' : ''}`}
+                                                        >
+                                                            {status.charAt(0).toUpperCase() + status.slice(1)}
+                                                        </Badge>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent className="bg-background border text-foreground border-border">
+                                                        <p className="text-xs">
+                                                            <span className="font-bold">Start:</span>{' '}
+                                                            {formatDate(proposal.activatedAt)}
+                                                        </p>
+                                                        <p className="text-xs">
+                                                            <span className="font-bold">End:</span>{' '}
+                                                            {formatDate(proposal.votingEndsAt)}
+                                                        </p>
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                            <Link href={proposal.link} target="_blank">
+                                                <Button
+                                                    variant="default"
+                                                    size="sm"
+                                                    className="bg-background hover:bg-muted text-foreground text-xs h-8 px-2 shadow-none"
+                                                >
+                                                    View Details
+                                                </Button>
+                                            </Link>
+                                            <TooltipProvider>
+                                                <Tooltip>
+                                                    <TooltipTrigger>
+                                                        <EllipsisHorizontalIcon className="h-5 w-5 text-muted-foreground flex-shrink-0"/>
+                                                    </TooltipTrigger>
+                                                    <TooltipContent className="bg-background text-foreground border border-border">
+                                                        Not voted yet
+                                                    </TooltipContent>
+                                                </Tooltip>
+                                            </TooltipProvider>
+                                        </div>
+                                    </div>
+                                </div>);
+                            }))}
                         </div>
+                        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-card to-transparent pointer-events-none"></div>
+                        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-card to-transparent pointer-events-none"></div>
+                        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-card to-transparent pointer-events-none"></div>
                         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-card to-transparent pointer-events-none"></div>
                     </ScrollArea>
                 </CardContent>
             </Card>
-        </div>
-    )
+        </div>)
 }
 
