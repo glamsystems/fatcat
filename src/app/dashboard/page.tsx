@@ -21,14 +21,14 @@ export default function Dashboard() {
         return null // or a loading spinner
     }
 
-    return (
-        <div className="min-h-screen flex flex-col">
-            <Header />
+    return (<div className="min-h-screen flex flex-col">
+            <Header/>
             <main className="flex-grow flex flex-col items-center justify-start py-24 gap-y-4 mt-12 md:mt-10">
-                    <DelegateForm/>
-                    <VoteList/>
+                <DelegateForm/>
+                <VoteList/>
             </main>
-        </div>
-)
+            <div className="fixed bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent pointer-events-none"></div>
+            <div className="fixed bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-background to-transparent pointer-events-none"></div>
+        </div>)
 }
 
