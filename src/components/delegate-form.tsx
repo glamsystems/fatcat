@@ -9,6 +9,8 @@ import { Label } from "@/components/ui/label"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import Link from 'next/link'
 
+const UNSTAKE_COUNTDOWN_TIME = 100000 * 1000; // 10 seconds for testing
+
 interface UnstakeItem {
     amount: string;
     endTime: number;
@@ -39,7 +41,7 @@ export default function DelegateForm() {
         if (parseFloat(unstakeAmount) > 0) {
             setUnstakeItems([...unstakeItems, {
                 amount: unstakeAmount,
-                endTime: Date.now() + 10 * 1000 // 10 seconds for testing
+                endTime: Date.now() + UNSTAKE_COUNTDOWN_TIME
             }]);
             setUnstakeAmount('0.00');
         }
@@ -55,7 +57,16 @@ export default function DelegateForm() {
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
         const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-        return `${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
+
+        if (days > 0) {
+            return `${days}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
+        } else if (hours > 0) {
+            return `${hours}h ${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`;
+        } else if (minutes > 0) {
+            return `${minutes}m ${seconds.toString().padStart(2, '0')}s`;
+        } else {
+            return `${seconds}s`;
+        }
     }
 
     return (
@@ -137,29 +148,31 @@ export default function DelegateForm() {
                                         <Label>Claimable JUP</Label>
                                         <div className="relative">
                                             <ScrollArea className="h-[210px] w-full rounded p-4">
-                                                {unstakeItems.length === 0 ? (<p className="text-center text-muted-foreground">No unstaking in progress</p>) : (unstakeItems.map((item, index) => (<div key={index} className="rounded mb-2 last:mb-0">
-                                                            <div className="flex justify-between items-center">
-                                                                <span className="text-sm sm:text-base">{item.amount} JUP</span>
-                                                                {now < item.endTime ? (<>
-                                                                        <span className="text-sm sm:text-base font-mono text-lime-500 dark:text-primary">
+                                                {unstakeItems.length === 0 ? (<p className="text-center text-muted-foreground">No unstaking in progress</p>) : (unstakeItems.map((item, index) => (<div key={index} className="rounded mb-2 last:mb-16">
+                                                    <div className="flex justify-between items-center">
+                                                        <span className="w-full text-sm sm:text-base">{item.amount} JUP</span>
+                                                        {now < item.endTime ? (<>
+                                                                        <span className="w-full text-sm sm:text-base font-mono text-lime-500 dark:text-primary text-right mr-4">
                                                                             {formatCountdown(item.endTime)}
                                                                         </span>
-                                                                        <Button
-                                                                            variant="outline"
-                                                                            size="sm"
-                                                                            onClick={() => handleCancelUnstake(index)}
-                                                                        >
-                                                                            Cancel
-                                                                        </Button>
-                                                                    </>) : (<Button
-                                                                        size="sm"
-                                                                        className="text-foreground dark:text-background"
-                                                                    >
-                                                                        Withdraw
-                                                                    </Button>)}
-                                                            </div>
-                                                        </div>)))}
+                                                            <Button
+                                                                variant="outline"
+                                                                size="sm"
+                                                                onClick={() => handleCancelUnstake(index)}
+                                                            >
+                                                                Cancel
+                                                            </Button>
+                                                        </>) : (<Button
+                                                            size="sm"
+                                                            className="text-foreground dark:text-background"
+                                                        >
+                                                            Withdraw
+                                                        </Button>)}
+                                                    </div>
+                                                </div>)))}
                                             </ScrollArea>
+                                            <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-card to-transparent pointer-events-none"></div>
+                                            <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-card to-transparent pointer-events-none"></div>
                                             <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-card to-transparent pointer-events-none"></div>
                                             <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-card to-transparent pointer-events-none"></div>
                                         </div>
