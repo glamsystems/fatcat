@@ -350,7 +350,7 @@ export default function VoteList() {
                                                             </AccordionTrigger>
                                                         )}
                                                         {status !== 'canceled' && (
-                                                            <AccordionContent className="px-3 pb-3">
+                                                            <AccordionContent className="px-3 pb-3 select-none">
                                                                 <hr className="mb-4 opacity-20" />
                                                                 <div className="space-y-3">
                                                                     <div>
