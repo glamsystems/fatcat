@@ -1,5 +1,7 @@
 'use client'
 
+import {EllipsisHorizontalIcon} from "@heroicons/react/20/solid";
+
 const PROPOSALS_LIMIT = 10;
 
 const DEFAULT_PROPOSAL = {
@@ -18,7 +20,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
-import { CheckCircleIcon, EllipsisHorizontalIcon } from "@heroicons/react/24/solid";
+import { Loader2 } from 'lucide-react';
 import Link from 'next/link'
 
 interface Proposal {
@@ -205,11 +207,16 @@ export default function VoteList() {
                     <ScrollArea className="h-[240px] w-full rounded">
                         <div className="pb-20">
                             {isLoading ? (
-                                <p className="text-center text-muted-foreground">Loading proposals...</p>
+                                <div className="h-full w-full flex flex-row items-center justify-center py-4">
+                                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground mr-2" />
+                                    <p className="text-muted-foreground">Loading proposals...</p>
+                                </div>
                             ) : error ? (
-                                <p className="text-center text-destructive">{error}</p>
+                                <div className="h-full w-full flex flex-col items-center justify-center py-8">
+                                    <p className="text-destructive">{error}</p>
+                                </div>
                             ) : filteredProposals.length === 0 ? (
-                                <p className="text-center text-muted-foreground">No proposals available</p>
+                                <p className="text-center text-muted-foreground py-4">No active or upcoming proposals.</p>
                             ) : (
                                 filteredProposals.map((proposal) => {
                                     const status = getProposalStatus(proposal.activatedAt, proposal.votingEndsAt);
