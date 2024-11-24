@@ -1,19 +1,19 @@
 'use client'
 
-import {EllipsisHorizontalIcon} from "@heroicons/react/20/solid";
-
-const PROPOSALS_LIMIT = 10;
-
-const DEFAULT_PROPOSAL = {
-    title: 'Untitled Proposal',
-};
-
+import { EllipsisHorizontalIcon } from "@heroicons/react/20/solid";
 import { useState, useEffect } from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion"
 import {
     Tooltip,
     TooltipContent,
@@ -22,6 +22,11 @@ import {
 } from "@/components/ui/tooltip"
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link'
+
+const PROPOSALS_LIMIT = 10;
+const DEFAULT_PROPOSAL = {
+    title: 'Untitled Proposal',
+};
 
 interface Proposal {
     key: string;
@@ -48,56 +53,53 @@ const fetchProposals = async (): Promise<Proposal[]> => {
     while (retryCount < maxRetries) {
         try {
             console.log(`Fetching proposals (attempt ${retryCount + 1}/${maxRetries})`);
-            const { data } = await axios.get(`/api/proposals?limit=${PROPOSALS_LIMIT}&_=${Date.now()}`, {
-                headers: {
-                    'Cache-Control': 'no-cache, no-store, must-revalidate',
-                    'Pragma': 'no-cache',
-                    'Expires': '0'
-                },
-                // Prevent browser caching
-                params: {
-                    _: Date.now()
-                }
-            });
+const { data } = await axios.get(`/api/proposals?limit=${PROPOSALS_LIMIT}&_=${Date.now()}`, {
+    headers: {
+        'Cache-Control': 'no-cache, no-store, must-revalidate',
+        'Pragma': 'no-cache',
+        'Expires': '0'
+    },
+    params: {
+        _: Date.now()
+    }
+});
 
-            if (!Array.isArray(data)) {
-                console.error('Unexpected API response format:', data);
-                throw new Error('Invalid response format from API');
-            }
+if (!Array.isArray(data)) {
+    console.error('Unexpected API response format:', data);
+    throw new Error('Invalid response format from API');
+}
 
-            return data.sort((a: Proposal, b: Proposal) =>
-                new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-            );
-        } catch (error) {
-            retryCount++;
-
-            if (axios.isAxiosError(error)) {
-                console.error(`Error in fetchProposals (attempt ${retryCount}/${maxRetries}):`, {
-                    status: error.response?.status,
-                    message: error.message,
-                    data: error.response?.data
-                });
-            } else {
-                console.error(`Error in fetchProposals (attempt ${retryCount}/${maxRetries}):`, {
-                    error,
-                    message: error instanceof Error ? error.message : 'Unknown error'
-                });
-            }
-
-            if (retryCount === maxRetries) {
-                throw new Error(
-                    axios.isAxiosError(error)
-                        ? `Failed to fetch proposals: ${error.response?.data?.message || error.message}`
-                        : 'Failed to fetch proposals after maximum retries'
-                );
-            }
-
-            // Wait before retrying (exponential backoff)
-            await new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 1000));
-        }
+return data.sort((a: Proposal, b: Proposal) =>
+    new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+);
+} catch (error) {
+    retryCount++;
+    if (axios.isAxiosError(error)) {
+        console.error(`Error in fetchProposals (attempt ${retryCount}/${maxRetries}):`, {
+            status: error.response?.status,
+            message: error.message,
+            data: error.response?.data
+        });
+    } else {
+        console.error(`Error in fetchProposals (attempt ${retryCount}/${maxRetries}):`, {
+            error,
+            message: error instanceof Error ? error.message : 'Unknown error'
+        });
     }
 
-    throw new Error('Failed to fetch proposals after maximum retries');
+    if (retryCount === maxRetries) {
+        throw new Error(
+            axios.isAxiosError(error)
+                ? `Failed to fetch proposals: ${error.response?.data?.message || error.message}`
+                : 'Failed to fetch proposals after maximum retries'
+        );
+    }
+
+    await new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 1000));
+}
+}
+
+throw new Error('Failed to fetch proposals after maximum retries');
 };
 
 const getProposalStatus = (activatedAt: string, votingEndsAt: string): 'upcoming' | 'ongoing' | 'completed' => {
@@ -115,6 +117,7 @@ export default function VoteList() {
     const [proposals, setProposals] = useState<Proposal[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [selectedVotes, setSelectedVotes] = useState<Record<string, string>>({});
 
     useEffect(() => {
         let mounted = true;
@@ -204,7 +207,7 @@ export default function VoteList() {
                         <ToggleGroupItem value="active" aria-label="Show active proposals">Active</ToggleGroupItem>
                         <ToggleGroupItem value="all" aria-label="Show all proposals">All</ToggleGroupItem>
                     </ToggleGroup>
-                    <ScrollArea className="h-[240px] w-full rounded">
+                    <ScrollArea className="h-[240px] w-full rounded overflow-hidden">
                         <div className="pb-20">
                             {isLoading ? (
                                 <div className="h-full w-full flex flex-row items-center justify-center py-4">
@@ -218,75 +221,135 @@ export default function VoteList() {
                             ) : filteredProposals.length === 0 ? (
                                 <p className="text-center text-muted-foreground py-4">No active or upcoming proposals.</p>
                             ) : (
-                                filteredProposals.map((proposal) => {
-                                    const status = getProposalStatus(proposal.activatedAt, proposal.votingEndsAt);
-                                    return (
-                                        <div key={proposal.key} className="mb-2 p-3 bg-accent rounded-lg">
-                                            <div className="flex items-center justify-between gap-x-4">
-                                                <div className="flex-1 min-w-0">
-                                                    <TooltipProvider>
-                                                        <Tooltip>
-                                                            <TooltipTrigger className="w-full">
-                                                                <h3 className="font-semibold max-w-48 text-base truncate text-left mt-2">
+                                <Accordion type="single" collapsible className="space-y-2">
+                                    {filteredProposals.map((proposal) => {
+                                        const status = getProposalStatus(proposal.activatedAt, proposal.votingEndsAt);
+                                        return (
+                                            <AccordionItem
+                                                key={proposal.key}
+                                                value={proposal.key}
+                                                className="border-0"
+                                            >
+                                                <div className="bg-accent rounded-lg">
+                                                    <AccordionTrigger className="px-3 py-2 hover:no-underline [&[data-state=open]>div]:rounded-b-none">
+                                                        <div className="flex items-center justify-between gap-x-4 w-full">
+                                                            <div className="flex-1 min-w-0">
+                                                                <h3 className="font-semibold max-w-48 text-base truncate text-left">
                                                                     {proposal.title || DEFAULT_PROPOSAL.title}
                                                                 </h3>
-                                                            </TooltipTrigger>
-                                                            <TooltipContent
-                                                                side="top"
-                                                                className="bg-background border text-foreground border-border"
-                                                            >
-                                                                <p className="text-sm">{proposal.title || DEFAULT_PROPOSAL.title}</p>
-                                                            </TooltipContent>
-                                                        </Tooltip>
-                                                    </TooltipProvider>
-                                                </div>
-                                                <div className="flex items-center gap-x-2">
-                                                    <TooltipProvider>
-                                                        <Tooltip>
-                                                            <TooltipTrigger>
-                                                                <Badge
-                                                                    variant={getBadgeVariant(status)}
-                                                                    className={`text-xs h-6 rounded-full shadow-none pointer-events-none ${getBadgeVariant(status) === 'default' ? 'text-foreground dark:text-background' : ''}`}
+                                                            </div>
+                                                            <div className="flex items-center gap-x-2">
+                                                                <TooltipProvider>
+                                                                    <Tooltip>
+                                                                        <TooltipTrigger>
+                                                                            <Badge
+                                                                                variant={getBadgeVariant(status)}
+                                                                                className={`text-xs h-6 rounded-full shadow-none pointer-events-none ${getBadgeVariant(status) === 'default' ? 'text-foreground dark:text-background' : ''}`}
+                                                                            >
+                                                                                {status.charAt(0).toUpperCase() + status.slice(1)}
+                                                                            </Badge>
+                                                                        </TooltipTrigger>
+                                                                        <TooltipContent className="bg-background border text-foreground border-border">
+                                                                            <p className="text-xs">
+                                                                                <span className="font-bold">Start:</span>{' '}
+                                                                                {formatDate(proposal.activatedAt)}
+                                                                            </p>
+                                                                            <p className="text-xs">
+                                                                                <span className="font-bold">End:</span>{' '}
+                                                                                {formatDate(proposal.votingEndsAt)}
+                                                                            </p>
+                                                                        </TooltipContent>
+                                                                    </Tooltip>
+                                                                </TooltipProvider>
+                                                                <TooltipProvider>
+                                                                    <Tooltip>
+                                                                        <TooltipTrigger>
+                                                                            <EllipsisHorizontalIcon className="h-5 w-5 text-muted-foreground flex-shrink-0 mr-4" />
+                                                                        </TooltipTrigger>
+                                                                        <TooltipContent className="bg-background text-foreground border border-border">
+                                                                            Not voted yet
+                                                                        </TooltipContent>
+                                                                    </Tooltip>
+                                                                </TooltipProvider>
+                                                            </div>
+                                                        </div>
+                                                    </AccordionTrigger>
+                                                    <AccordionContent className="px-3 pb-3">
+                                                        <div className="space-y-3">
+                                                            <div>
+                                                                <h4 className="text-sm font-medium mb-1">Title</h4>
+                                                                <p className="text-sm text-muted-foreground">
+                                                                    {proposal.title || DEFAULT_PROPOSAL.title}
+                                                                </p>
+                                                            </div>
+                                                            <div>
+                                                                <h4 className="text-sm font-medium mb-1">Timeline</h4>
+                                                                <div className="text-sm text-muted-foreground space-y-1">
+                                                                    <p>Start: {formatDate(proposal.activatedAt)}</p>
+                                                                    <p>End: {formatDate(proposal.votingEndsAt)}</p>
+                                                                </div>
+                                                            </div>
+                                                            <div>
+                                                                <h4 className="text-sm font-medium mb-2">Options</h4>
+                                                                <RadioGroup
+                                                                    value={selectedVotes[proposal.key] || ""}
+                                                                    onValueChange={(value) => {
+                                                                        setSelectedVotes(prev => ({
+                                                                            ...prev,
+                                                                            [proposal.key]: value
+                                                                        }));
+                                                                    }}
+                                                                    className="space-y-2 mb-4"
+                                                                    disabled={status !== 'ongoing'}
                                                                 >
-                                                                    {status.charAt(0).toUpperCase() + status.slice(1)}
-                                                                </Badge>
-                                                            </TooltipTrigger>
-                                                            <TooltipContent className="bg-background border text-foreground border-border">
-                                                                <p className="text-xs">
-                                                                    <span className="font-bold">Start:</span>{' '}
-                                                                    {formatDate(proposal.activatedAt)}
-                                                                </p>
-                                                                <p className="text-xs">
-                                                                    <span className="font-bold">End:</span>{' '}
-                                                                    {formatDate(proposal.votingEndsAt)}
-                                                                </p>
-                                                            </TooltipContent>
-                                                        </Tooltip>
-                                                    </TooltipProvider>
-                                                    <Link href={proposal.link} target="_blank">
-                                                        <Button
-                                                            variant="default"
-                                                            size="sm"
-                                                            className="bg-background hover:bg-muted text-foreground text-xs h-8 px-2 shadow-none"
-                                                        >
-                                                            View Details
-                                                        </Button>
-                                                    </Link>
-                                                    <TooltipProvider>
-                                                        <Tooltip>
-                                                            <TooltipTrigger>
-                                                                <EllipsisHorizontalIcon className="h-5 w-5 text-muted-foreground flex-shrink-0"/>
-                                                            </TooltipTrigger>
-                                                            <TooltipContent className="bg-background text-foreground border border-border">
-                                                                Not voted yet
-                                                            </TooltipContent>
-                                                        </Tooltip>
-                                                    </TooltipProvider>
+                                                                    {proposal.options.map((option, index) => (
+                                                                        <div key={index} className="flex items-center justify-between space-x-2">
+                                                                            <div className="flex items-center space-x-2">
+                                                                                <RadioGroupItem
+                                                                                    value={index.toString()}
+                                                                                    id={`${proposal.key}-${index}`}
+                                                                                    disabled={status !== 'ongoing'}
+                                                                                />
+                                                                                <label
+                                                                                    htmlFor={`${proposal.key}-${index}`}
+                                                                                    className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                                                >
+                                                                                    {option}
+                                                                                </label>
+                                                                            </div>
+                                                                            <span className="text-xs text-muted-foreground">
+                                                                                {proposal.optionVotes[index].toLocaleString()}
+                                                                            </span>
+                                                                        </div>
+                                                                    ))}
+                                                                </RadioGroup>
+                                                            </div>
+                                                            <div className="flex gap-4">
+                                                                <Link href={proposal.link} target="_blank" className="w-full">
+                                                                    <Button
+                                                                        variant="default"
+                                                                        size="sm"
+                                                                        className="bg-background hover:bg-muted text-foreground shadow-none w-full"
+                                                                    >
+                                                                        View Full Details
+                                                                    </Button>
+                                                                </Link>
+                                                                <Button
+                                                                    variant="default"
+                                                                    size="sm"
+                                                                    disabled={!selectedVotes[proposal.key] || status !== 'ongoing'}
+                                                                    className="text-foreground dark:text-background shadow-none w-full"
+                                                                >
+                                                                    Override Vote
+                                                                </Button>
+                                                            </div>
+                                                        </div>
+                                                    </AccordionContent>
                                                 </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })
+                                            </AccordionItem>
+                                        );
+                                    })}
+                                </Accordion>
                             )}
                         </div>
                         <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-card to-transparent pointer-events-none" />
