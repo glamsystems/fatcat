@@ -113,7 +113,7 @@ const getProposalStatus = (activatedAt: string, votingEndsAt: string): 'upcoming
 };
 
 export default function VoteList() {
-    const [filter, setFilter] = useState<'active' | 'all'>('active');
+    const [filter, setFilter] = useState<'all' | 'active'>('all');
     const [proposals, setProposals] = useState<Proposal[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -201,14 +201,14 @@ export default function VoteList() {
                             type="single"
                             value={filter}
                             onValueChange={(value) => {
-                                if (value) setFilter(value as 'active' | 'all');
+                                if (value) setFilter(value as 'all' | 'active');
                             }}
                             className="mb-4"
                         >
-                            <ToggleGroupItem value="active" aria-label="Show active proposals">Active</ToggleGroupItem>
                             <ToggleGroupItem value="all" aria-label="Show all proposals">All</ToggleGroupItem>
+                            <ToggleGroupItem value="active" aria-label="Show active proposals">Active</ToggleGroupItem>
                         </ToggleGroup>
-                        <ScrollArea className="h-[240px] w-full rounded overflow-hidden">
+                        <ScrollArea className="h-[480px] w-full rounded overflow-hidden">
                             <div className="pb-20">
                                 {isLoading ? (<div className="h-full w-full flex flex-row items-center justify-center py-4">
                                     <Loader2 className="h-4 w-4 animate-spin text-muted-foreground mr-2"/>
@@ -218,16 +218,19 @@ export default function VoteList() {
                                 </div>) : filteredProposals.length === 0 ? (<p className="text-center text-muted-foreground py-4">No active or upcoming proposals.</p>) : (<Accordion type="single" collapsible className="space-y-2">
                                     {filteredProposals.map((proposal) => {
                                         const status = getProposalStatus(proposal.activatedAt, proposal.votingEndsAt);
-                                        return (<AccordionItem
-                                            key={proposal.key}
-                                            value={proposal.key}
-                                            className="border-0"
-                                        >
-                                            <div className="bg-accent rounded-lg">
-                                                <AccordionTrigger className="px-3 py-2 hover:no-underline [&[data-state=open]>div]:rounded-b-none">
-                                                    <div className="flex items-center justify-between gap-x-4 w-full">
-                                                        <div className="flex-1 min-w-0">
-                                                            <h3 className="font-semibold max-w-48 text-base truncate text-left">
+                                        return (
+                                            <AccordionItem
+                                                key={proposal.key}
+                                                value={proposal.key}
+                                                className="border-0 group"
+                                            >
+                                                <div className="bg-accent rounded-lg">
+                                                    <AccordionTrigger className="px-3 py-2 hover:no-underline [&[data-state=open]>div]:rounded-b-none">
+                                                        <div className="flex items-center justify-between gap-x-4 w-full">
+                                                            <div className="flex-1 min-w-0">
+                                                                <h3
+                                                                    className="font-semibold max-w-48 text-base truncate text-left transition-all group-data-[state=open]:opacity-10" // Corrected className
+                                                                >
                                                                 {proposal.title || DEFAULT_PROPOSAL.title}
                                                             </h3>
                                                         </div>
@@ -268,22 +271,18 @@ export default function VoteList() {
                                                     </div>
                                                 </AccordionTrigger>
                                                 <AccordionContent className="px-3 pb-3">
+                                                    <hr className="mb-4 opacity-20"/>
                                                     <div className="space-y-3">
                                                         <div>
-                                                            <h4 className="text-sm font-medium mb-1">Title</h4>
-                                                            <p className="text-sm text-muted-foreground">
-                                                                {proposal.title || DEFAULT_PROPOSAL.title}
-                                                            </p>
+                                                            <h3 className="text-base font-medium mb-1">{proposal.title || DEFAULT_PROPOSAL.title}</h3>
                                                         </div>
                                                         <div>
-                                                            <h4 className="text-sm font-medium mb-1">Timeline</h4>
-                                                            <div className="text-sm text-muted-foreground space-y-1">
-                                                                <p>Start: {formatDate(proposal.activatedAt)}</p>
-                                                                <p>End: {formatDate(proposal.votingEndsAt)}</p>
+                                                            <div className="text-sm text-muted-foreground space-y-1 mb-6">
+                                                                <p><b>Start:</b> {formatDate(proposal.activatedAt)}</p>
+                                                                <p><b>End:</b> {formatDate(proposal.votingEndsAt)}</p>
                                                             </div>
                                                         </div>
                                                         <div>
-                                                            <h4 className="text-sm font-medium mb-2">Options</h4>
                                                             <RadioGroup
                                                                 value={selectedVotes[proposal.key] || ""}
                                                                 onValueChange={(value) => {
@@ -291,7 +290,7 @@ export default function VoteList() {
                                                                         ...prev, [proposal.key]: value
                                                                     }));
                                                                 }}
-                                                                className="space-y-2 mb-4"
+                                                                className="space-y-2 mb-6"
                                                                 disabled={status !== 'ongoing'}
                                                             >
                                                                 {proposal.options.map((option, index) => (<div key={index} className="flex items-center justify-between space-x-2">
