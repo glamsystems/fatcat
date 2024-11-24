@@ -71,7 +71,7 @@ export default function DelegateForm() {
 
     return (
         <div className="w-full max-w-xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-            <Card className="bg-card text-card-foreground p-4 sm:p-6 rounded border-muted">
+            <Card className="bg-card text-card-foreground p-4 sm:p-6 rounded border-muted select-none">
                 <CardHeader>
                     <CardTitle className="text-2xl">Votes on Autopilot</CardTitle>
                     <CardDescription>
@@ -85,7 +85,7 @@ export default function DelegateForm() {
                     </CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <Tabs defaultValue="stake" className="w-full">
+                    <Tabs defaultValue="stake" className="w-full select-none">
                         <TabsList className="grid w-full grid-cols-3 mb-4">
                             <TabsTrigger value="stake">Stake</TabsTrigger>
                             <TabsTrigger value="unstake">Unstake</TabsTrigger>

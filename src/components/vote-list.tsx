@@ -195,7 +195,7 @@ export default function VoteList() {
 
     return (
         <div className="w-full max-w-xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-            <Card className="bg-card text-card-foreground p-4 rounded border-muted">
+            <Card className="select-none text-card-foreground p-4 rounded border-muted">
                 <div className="p-6">
                     <CardHeader className="p-0 pb-4">
                         <CardTitle className="text-xl mb-1">Proposals</CardTitle>
@@ -207,17 +207,17 @@ export default function VoteList() {
                         </CardDescription>
                     </CardHeader>
                     <CardContent className="p-0">
-                        <ToggleGroup
-                            type="single"
-                            value={filter}
-                            onValueChange={(value) => {
-                                if (value) setFilter(value as 'all' | 'active');
-                            }}
-                            className="mb-4"
-                        >
-                            <ToggleGroupItem value="all" aria-label="Show all proposals">All</ToggleGroupItem>
-                            <ToggleGroupItem value="active" aria-label="Show active proposals">Active</ToggleGroupItem>
-                        </ToggleGroup>
+                        {/*<ToggleGroup*/}
+                        {/*    type="single"*/}
+                        {/*    value={filter}*/}
+                        {/*    onValueChange={(value) => {*/}
+                        {/*        if (value) setFilter(value as 'all' | 'active');*/}
+                        {/*    }}*/}
+                        {/*    className="mb-4 select-none"*/}
+                        {/*>*/}
+                        {/*    <ToggleGroupItem value="all" aria-label="Show all proposals">All</ToggleGroupItem>*/}
+                        {/*    <ToggleGroupItem value="active" aria-label="Show active proposals">Active</ToggleGroupItem>*/}
+                        {/*</ToggleGroup>*/}
                         <ScrollArea className="h-[480px] w-full rounded overflow-hidden">
                             <div className="pb-20">
                                 {isLoading ? (
@@ -259,7 +259,7 @@ export default function VoteList() {
                                                                 <div className="flex items-center justify-between gap-x-4 w-full">
                                                                     <div className="flex-1 min-w-0">
                                                                         <h3
-                                                                            className="font-semibold max-w-48 text-base truncate text-left text-muted-foreground"
+                                                                            className="select-none font-semibold max-w-48 text-base truncate text-left text-muted-foreground"
                                                                         >
                                                                             {proposal.title || DEFAULT_PROPOSAL.title}
                                                                         </h3>
@@ -271,7 +271,7 @@ export default function VoteList() {
                                                                                     <span>
                                                                                         <Badge
                                                                                             variant={getBadgeVariant(status)}
-                                                                                            className={`text-xs h-6 font-medium rounded-full shadow-none pointer-events-none text-muted-foreground ${
+                                                                                            className={`select-none text-xs h-6 font-medium rounded-full shadow-none pointer-events-none text-muted-foreground ${
                                                                                                 getBadgeVariant(status) === 'default'
                                                                                                     ? 'text-foreground dark:text-background'
                                                                                                     : ''
@@ -297,7 +297,7 @@ export default function VoteList() {
                                                                 <div className="flex items-center justify-between gap-x-4 w-full">
                                                                     <div className="flex-1 min-w-0">
                                                                         <h3
-                                                                            className="font-semibold max-w-48 text-base truncate text-left transition-all group-data-[state=open]:opacity-10"
+                                                                            className="select-none font-semibold max-w-48 text-base truncate text-left transition-all group-data-[state=open]:opacity-10"
                                                                         >
                                                                             {proposal.title || DEFAULT_PROPOSAL.title}
                                                                         </h3>
@@ -354,7 +354,7 @@ export default function VoteList() {
                                                                 <hr className="mb-4 opacity-20" />
                                                                 <div className="space-y-3">
                                                                     <div>
-                                                                        <h3 className="text-base font-medium mb-1">{proposal.title || DEFAULT_PROPOSAL.title}</h3>
+                                                                        <h3 className="select-none text-base font-medium mb-1">{proposal.title || DEFAULT_PROPOSAL.title}</h3>
                                                                     </div>
                                                                     <div>
                                                                         <div className="text-sm text-muted-foreground space-y-1 mb-6">
