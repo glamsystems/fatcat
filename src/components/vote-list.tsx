@@ -384,12 +384,12 @@ export default function VoteList() {
                                                                                         />
                                                                                         <label
                                                                                             htmlFor={`${proposal.key}-${optionData.index}`}
-                                                                                            className="text-sm font-normal leading-none peer-disabled:cursor-default peer-disabled:opacity-70"
+                                                                                            className="text-sm font-normal leading-none peer-disabled:cursor-default peer-disabled:opacity-70 select-none"
                                                                                         >
                                                                                             {optionData.option}
                                                                                         </label>
                                                                                     </div>
-                                                                                    <span className="text-xs text-muted-foreground">
+                                                                                    <span className="text-xs text-muted-foreground select-none">
                                                                                         {Number(optionData.votes.toFixed(OPTION_VOTE_DECIMALS)).toLocaleString()} ({optionData.percentage}%)
                                                                                     </span>
                                                                                 </div>
