@@ -389,7 +389,7 @@ export default function VoteList() {
                                                                                             {optionData.option}
                                                                                         </label>
                                                                                     </div>
-                                                                                    <span className="text-xs text-muted-foreground select-none">
+                                                                                    <span className="text-xs text-muted-foreground select-none font-mono">
                                                                                         {Number(optionData.votes.toFixed(OPTION_VOTE_DECIMALS)).toLocaleString()} ({optionData.percentage}%)
                                                                                     </span>
                                                                                 </div>
