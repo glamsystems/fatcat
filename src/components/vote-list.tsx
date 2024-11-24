@@ -37,20 +37,55 @@ interface Proposal {
     type: number;
 }
 
+import axios from 'axios';
+
 const fetchProposals = async (): Promise<Proposal[]> => {
-    try {
-        const response = await fetch(`https://api.glam.systems/v0/vote/proposals/jupiter?limit=${PROPOSALS_LIMIT}`);
-        if (!response.ok) {
-            throw new Error('Failed to fetch proposals');
+    const maxRetries = 3;
+    let retryCount = 0;
+
+    while (retryCount < maxRetries) {
+        try {
+            console.log(`Fetching proposals (attempt ${retryCount + 1}/${maxRetries})`);
+            const { data } = await axios.get(`/api/proposals?limit=${PROPOSALS_LIMIT}`);
+
+            if (!Array.isArray(data)) {
+                console.error('Unexpected API response format:', data);
+                throw new Error('Invalid response format from API');
+            }
+
+            return data.sort((a: Proposal, b: Proposal) =>
+                new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
+        } catch (error) {
+            retryCount++;
+
+            if (axios.isAxiosError(error)) {
+                console.error(`Error in fetchProposals (attempt ${retryCount}/${maxRetries}):`, {
+                    status: error.response?.status,
+                    message: error.message,
+                    data: error.response?.data
+                });
+            } else {
+                console.error(`Error in fetchProposals (attempt ${retryCount}/${maxRetries}):`, {
+                    error,
+                    message: error instanceof Error ? error.message : 'Unknown error'
+                });
+            }
+
+            if (retryCount === maxRetries) {
+                throw new Error(
+                    axios.isAxiosError(error)
+                        ? `Failed to fetch proposals: ${error.response?.data?.message || error.message}`
+                        : 'Failed to fetch proposals after maximum retries'
+                );
+            }
+
+            // Wait before retrying (exponential backoff)
+            await new Promise(resolve => setTimeout(resolve, Math.pow(2, retryCount) * 1000));
         }
-        const data = await response.json();
-        return data.sort((a: Proposal, b: Proposal) =>
-            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-        );
-    } catch (error) {
-        console.error('Error fetching proposals:', error);
-        return [];
     }
+
+    throw new Error('Failed to fetch proposals after maximum retries');
 };
 
 const getProposalStatus = (activatedAt: string, votingEndsAt: string): 'upcoming' | 'ongoing' | 'completed' => {
@@ -70,24 +105,40 @@ export default function VoteList() {
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
+        let mounted = true;
+
         const loadProposals = async () => {
+            if (!mounted) return;
+
             try {
                 setIsLoading(true);
                 setError(null);
                 const data = await fetchProposals();
-                setProposals(data);
+
+                if (mounted) {
+                    setProposals(data);
+                }
             } catch (err) {
-                setError('Failed to load proposals. Please try again later.');
-                console.error('Error loading proposals:', err);
+                if (mounted) {
+                    const errorMessage = err instanceof Error ? err.message : 'Failed to load proposals';
+                    setError(errorMessage);
+                    console.error('Error loading proposals:', errorMessage);
+                }
             } finally {
-                setIsLoading(false);
+                if (mounted) {
+                    setIsLoading(false);
+                }
             }
         };
+
         loadProposals();
 
-        // Set up polling every 5 minutes to keep data fresh
         const pollInterval = setInterval(loadProposals, 5 * 60 * 1000);
-        return () => clearInterval(pollInterval);
+
+        return () => {
+            mounted = false;
+            clearInterval(pollInterval);
+        };
     }, []);
 
     const filteredProposals = filter === 'active'
