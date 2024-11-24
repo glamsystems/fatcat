@@ -377,7 +377,7 @@ export default function VoteList() {
                                                                                 <div key={optionData.index} className="flex items-center justify-between space-x-2">
                                                                                     <div className="flex items-center space-x-2">
                                                                                         <RadioGroupItem
-                                                                                            className={status === 'ongoing' ? 'cursor-pointer' : 'cursor-default'}
+                                                                                            className={status === 'ongoing' ? '' : 'pointer-events-none'}
                                                                                             value={optionData.index.toString()}
                                                                                             id={`${proposal.key}-${optionData.index}`}
                                                                                             disabled={status !== 'ongoing'}
