@@ -5,19 +5,16 @@ import https from 'https';
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-// Create custom axios instance based on environment
+// Create custom axios instance with SSL verification disabled in development
 const instance = axios.create({
-    httpsAgent: process.env.NODE_ENV === 'development'
-        ? new https.Agent({ rejectUnauthorized: false })
-        : undefined
+    httpsAgent: new https.Agent({
+        rejectUnauthorized: false // This was working locally
+    })
 });
 
 export async function GET(request: Request) {
     const start = Date.now();
-    console.log('[API] Starting proposals request', {
-        environment: process.env.NODE_ENV,
-        sslVerification: process.env.NODE_ENV !== 'development'
-    });
+    console.log('[API] Starting proposals request');
 
     try {
         const { searchParams } = new URL(request.url);
@@ -28,7 +25,9 @@ export async function GET(request: Request) {
 
         const response = await instance.get(apiUrl, {
             headers: {
-                'Cache-Control': 'no-cache',
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0',
                 'Accept': '*/*',
                 'Accept-Encoding': 'gzip, deflate, br',
                 'User-Agent': 'PostmanRuntime/7.42.0'
@@ -40,7 +39,13 @@ export async function GET(request: Request) {
             dataLength: Array.isArray(response.data) ? response.data.length : 'not an array'
         });
 
-        return NextResponse.json(response.data);
+        return NextResponse.json(response.data, {
+            headers: {
+                'Cache-Control': 'no-cache, no-store, must-revalidate',
+                'Pragma': 'no-cache',
+                'Expires': '0'
+            }
+        });
 
     } catch (error) {
         if (axios.isAxiosError(error)) {
@@ -50,8 +55,7 @@ export async function GET(request: Request) {
                 data: error.response?.data,
                 duration: Date.now() - start,
                 code: error.code,
-                cause: error.cause,
-                env: process.env.NODE_ENV
+                cause: error.cause
             });
 
             return NextResponse.json(
@@ -61,15 +65,21 @@ export async function GET(request: Request) {
                     status: error.response?.status,
                     data: error.response?.data
                 },
-                { status: error.response?.status || 500 }
+                {
+                    status: error.response?.status || 500,
+                    headers: {
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache',
+                        'Expires': '0'
+                    }
+                }
             );
         }
 
         console.error('[API] Unexpected error:', {
             message: error instanceof Error ? error.message : 'Unknown error occurred',
             stack: error instanceof Error ? error.stack : undefined,
-            duration: Date.now() - start,
-            env: process.env.NODE_ENV
+            duration: Date.now() - start
         });
 
         return NextResponse.json(
@@ -77,7 +87,14 @@ export async function GET(request: Request) {
                 message: 'Internal server error',
                 details: error instanceof Error ? error.message : 'Unknown error'
             },
-            { status: 500 }
+            {
+                status: 500,
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                }
+            }
         );
     }
 }

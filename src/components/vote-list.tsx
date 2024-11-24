@@ -46,7 +46,17 @@ const fetchProposals = async (): Promise<Proposal[]> => {
     while (retryCount < maxRetries) {
         try {
             console.log(`Fetching proposals (attempt ${retryCount + 1}/${maxRetries})`);
-            const { data } = await axios.get(`/api/proposals?limit=${PROPOSALS_LIMIT}`);
+            const { data } = await axios.get(`/api/proposals?limit=${PROPOSALS_LIMIT}&_=${Date.now()}`, {
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                },
+                // Prevent browser caching
+                params: {
+                    _: Date.now()
+                }
+            });
 
             if (!Array.isArray(data)) {
                 console.error('Unexpected API response format:', data);
