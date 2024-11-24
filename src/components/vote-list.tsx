@@ -23,9 +23,9 @@ import {
 import { Loader2 } from 'lucide-react';
 import Link from 'next/link'
 
-const PROPOSALS_LIMIT = 10;
+const PROPOSALS_LIMIT = 9999;
 const DEFAULT_PROPOSAL = {
-    title: 'Untitled Proposal',
+    title: 'Proposal',
 };
 
 interface Proposal {
@@ -186,176 +186,165 @@ export default function VoteList() {
     return (
         <div className="w-full max-w-xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
             <Card className="bg-card text-card-foreground p-4 rounded border-muted">
-                <CardHeader className="p-0 pb-4">
-                    <CardTitle className="text-xl mb-1">Proposals</CardTitle>
-                    <CardDescription>
-                        For full details visit the{' '}
-                        <Link href="https://vote.jup.ag/" target="_blank" className="underline hover:text-primary">
-                            Jupiter Voting Platform
-                        </Link>
-                    </CardDescription>
-                </CardHeader>
-                <CardContent className="p-0">
-                    <ToggleGroup
-                        type="single"
-                        value={filter}
-                        onValueChange={(value) => {
-                            if (value) setFilter(value as 'active' | 'all');
-                        }}
-                        className="mb-4"
-                    >
-                        <ToggleGroupItem value="active" aria-label="Show active proposals">Active</ToggleGroupItem>
-                        <ToggleGroupItem value="all" aria-label="Show all proposals">All</ToggleGroupItem>
-                    </ToggleGroup>
-                    <ScrollArea className="h-[240px] w-full rounded overflow-hidden">
-                        <div className="pb-20">
-                            {isLoading ? (
-                                <div className="h-full w-full flex flex-row items-center justify-center py-4">
-                                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground mr-2" />
+                <div className="p-6">
+                    <CardHeader className="p-0 pb-4">
+                        <CardTitle className="text-xl mb-1">Proposals</CardTitle>
+                        <CardDescription>
+                            For full details visit the{' '}
+                            <Link href="https://vote.jup.ag/" target="_blank" className="underline hover:text-primary">
+                                Jupiter Voting Platform
+                            </Link>
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent className="p-0">
+                        <ToggleGroup
+                            type="single"
+                            value={filter}
+                            onValueChange={(value) => {
+                                if (value) setFilter(value as 'active' | 'all');
+                            }}
+                            className="mb-4"
+                        >
+                            <ToggleGroupItem value="active" aria-label="Show active proposals">Active</ToggleGroupItem>
+                            <ToggleGroupItem value="all" aria-label="Show all proposals">All</ToggleGroupItem>
+                        </ToggleGroup>
+                        <ScrollArea className="h-[240px] w-full rounded overflow-hidden">
+                            <div className="pb-20">
+                                {isLoading ? (<div className="h-full w-full flex flex-row items-center justify-center py-4">
+                                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground mr-2"/>
                                     <p className="text-muted-foreground">Loading proposals...</p>
-                                </div>
-                            ) : error ? (
-                                <div className="h-full w-full flex flex-col items-center justify-center py-8">
+                                </div>) : error ? (<div className="h-full w-full flex flex-col items-center justify-center py-8">
                                     <p className="text-destructive">{error}</p>
-                                </div>
-                            ) : filteredProposals.length === 0 ? (
-                                <p className="text-center text-muted-foreground py-4">No active or upcoming proposals.</p>
-                            ) : (
-                                <Accordion type="single" collapsible className="space-y-2">
+                                </div>) : filteredProposals.length === 0 ? (<p className="text-center text-muted-foreground py-4">No active or upcoming proposals.</p>) : (<Accordion type="single" collapsible className="space-y-2">
                                     {filteredProposals.map((proposal) => {
                                         const status = getProposalStatus(proposal.activatedAt, proposal.votingEndsAt);
-                                        return (
-                                            <AccordionItem
-                                                key={proposal.key}
-                                                value={proposal.key}
-                                                className="border-0"
-                                            >
-                                                <div className="bg-accent rounded-lg">
-                                                    <AccordionTrigger className="px-3 py-2 hover:no-underline [&[data-state=open]>div]:rounded-b-none">
-                                                        <div className="flex items-center justify-between gap-x-4 w-full">
-                                                            <div className="flex-1 min-w-0">
-                                                                <h3 className="font-semibold max-w-48 text-base truncate text-left">
-                                                                    {proposal.title || DEFAULT_PROPOSAL.title}
-                                                                </h3>
-                                                            </div>
-                                                            <div className="flex items-center gap-x-2">
-                                                                <TooltipProvider>
-                                                                    <Tooltip>
-                                                                        <TooltipTrigger>
-                                                                            <Badge
-                                                                                variant={getBadgeVariant(status)}
-                                                                                className={`text-xs h-6 rounded-full shadow-none pointer-events-none ${getBadgeVariant(status) === 'default' ? 'text-foreground dark:text-background' : ''}`}
-                                                                            >
-                                                                                {status.charAt(0).toUpperCase() + status.slice(1)}
-                                                                            </Badge>
-                                                                        </TooltipTrigger>
-                                                                        <TooltipContent className="bg-background border text-foreground border-border">
-                                                                            <p className="text-xs">
-                                                                                <span className="font-bold">Start:</span>{' '}
-                                                                                {formatDate(proposal.activatedAt)}
-                                                                            </p>
-                                                                            <p className="text-xs">
-                                                                                <span className="font-bold">End:</span>{' '}
-                                                                                {formatDate(proposal.votingEndsAt)}
-                                                                            </p>
-                                                                        </TooltipContent>
-                                                                    </Tooltip>
-                                                                </TooltipProvider>
-                                                                <TooltipProvider>
-                                                                    <Tooltip>
-                                                                        <TooltipTrigger>
-                                                                            <EllipsisHorizontalIcon className="h-5 w-5 text-muted-foreground flex-shrink-0 mr-4" />
-                                                                        </TooltipTrigger>
-                                                                        <TooltipContent className="bg-background text-foreground border border-border">
-                                                                            Not voted yet
-                                                                        </TooltipContent>
-                                                                    </Tooltip>
-                                                                </TooltipProvider>
+                                        return (<AccordionItem
+                                            key={proposal.key}
+                                            value={proposal.key}
+                                            className="border-0"
+                                        >
+                                            <div className="bg-accent rounded-lg">
+                                                <AccordionTrigger className="px-3 py-2 hover:no-underline [&[data-state=open]>div]:rounded-b-none">
+                                                    <div className="flex items-center justify-between gap-x-4 w-full">
+                                                        <div className="flex-1 min-w-0">
+                                                            <h3 className="font-semibold max-w-48 text-base truncate text-left">
+                                                                {proposal.title || DEFAULT_PROPOSAL.title}
+                                                            </h3>
+                                                        </div>
+                                                        <div className="flex items-center gap-x-2">
+                                                            <TooltipProvider>
+                                                                <Tooltip>
+                                                                    <TooltipTrigger>
+                                                                        <Badge
+                                                                            variant={getBadgeVariant(status)}
+                                                                            className={`text-xs h-6 rounded-full shadow-none pointer-events-none ${getBadgeVariant(status) === 'default' ? 'text-foreground dark:text-background' : ''}`}
+                                                                        >
+                                                                            {status.charAt(0).toUpperCase() + status.slice(1)}
+                                                                        </Badge>
+                                                                    </TooltipTrigger>
+                                                                    <TooltipContent className="bg-background border text-foreground border-border">
+                                                                        <p className="text-xs">
+                                                                            <span className="font-bold">Start:</span>{' '}
+                                                                            {formatDate(proposal.activatedAt)}
+                                                                        </p>
+                                                                        <p className="text-xs">
+                                                                            <span className="font-bold">End:</span>{' '}
+                                                                            {formatDate(proposal.votingEndsAt)}
+                                                                        </p>
+                                                                    </TooltipContent>
+                                                                </Tooltip>
+                                                            </TooltipProvider>
+                                                            <TooltipProvider>
+                                                                <Tooltip>
+                                                                    <TooltipTrigger>
+                                                                        <EllipsisHorizontalIcon className="h-5 w-5 text-muted-foreground flex-shrink-0 mr-4"/>
+                                                                    </TooltipTrigger>
+                                                                    <TooltipContent className="bg-background text-foreground border border-border">
+                                                                        Not voted yet
+                                                                    </TooltipContent>
+                                                                </Tooltip>
+                                                            </TooltipProvider>
+                                                        </div>
+                                                    </div>
+                                                </AccordionTrigger>
+                                                <AccordionContent className="px-3 pb-3">
+                                                    <div className="space-y-3">
+                                                        <div>
+                                                            <h4 className="text-sm font-medium mb-1">Title</h4>
+                                                            <p className="text-sm text-muted-foreground">
+                                                                {proposal.title || DEFAULT_PROPOSAL.title}
+                                                            </p>
+                                                        </div>
+                                                        <div>
+                                                            <h4 className="text-sm font-medium mb-1">Timeline</h4>
+                                                            <div className="text-sm text-muted-foreground space-y-1">
+                                                                <p>Start: {formatDate(proposal.activatedAt)}</p>
+                                                                <p>End: {formatDate(proposal.votingEndsAt)}</p>
                                                             </div>
                                                         </div>
-                                                    </AccordionTrigger>
-                                                    <AccordionContent className="px-3 pb-3">
-                                                        <div className="space-y-3">
-                                                            <div>
-                                                                <h4 className="text-sm font-medium mb-1">Title</h4>
-                                                                <p className="text-sm text-muted-foreground">
-                                                                    {proposal.title || DEFAULT_PROPOSAL.title}
-                                                                </p>
-                                                            </div>
-                                                            <div>
-                                                                <h4 className="text-sm font-medium mb-1">Timeline</h4>
-                                                                <div className="text-sm text-muted-foreground space-y-1">
-                                                                    <p>Start: {formatDate(proposal.activatedAt)}</p>
-                                                                    <p>End: {formatDate(proposal.votingEndsAt)}</p>
-                                                                </div>
-                                                            </div>
-                                                            <div>
-                                                                <h4 className="text-sm font-medium mb-2">Options</h4>
-                                                                <RadioGroup
-                                                                    value={selectedVotes[proposal.key] || ""}
-                                                                    onValueChange={(value) => {
-                                                                        setSelectedVotes(prev => ({
-                                                                            ...prev,
-                                                                            [proposal.key]: value
-                                                                        }));
-                                                                    }}
-                                                                    className="space-y-2 mb-4"
-                                                                    disabled={status !== 'ongoing'}
-                                                                >
-                                                                    {proposal.options.map((option, index) => (
-                                                                        <div key={index} className="flex items-center justify-between space-x-2">
-                                                                            <div className="flex items-center space-x-2">
-                                                                                <RadioGroupItem
-                                                                                    value={index.toString()}
-                                                                                    id={`${proposal.key}-${index}`}
-                                                                                    disabled={status !== 'ongoing'}
-                                                                                />
-                                                                                <label
-                                                                                    htmlFor={`${proposal.key}-${index}`}
-                                                                                    className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                                                                                >
-                                                                                    {option}
-                                                                                </label>
-                                                                            </div>
-                                                                            <span className="text-xs text-muted-foreground">
+                                                        <div>
+                                                            <h4 className="text-sm font-medium mb-2">Options</h4>
+                                                            <RadioGroup
+                                                                value={selectedVotes[proposal.key] || ""}
+                                                                onValueChange={(value) => {
+                                                                    setSelectedVotes(prev => ({
+                                                                        ...prev, [proposal.key]: value
+                                                                    }));
+                                                                }}
+                                                                className="space-y-2 mb-4"
+                                                                disabled={status !== 'ongoing'}
+                                                            >
+                                                                {proposal.options.map((option, index) => (<div key={index} className="flex items-center justify-between space-x-2">
+                                                                    <div className="flex items-center space-x-2">
+                                                                        <RadioGroupItem
+                                                                            value={index.toString()}
+                                                                            id={`${proposal.key}-${index}`}
+                                                                            disabled={status !== 'ongoing'}
+                                                                        />
+                                                                        <label
+                                                                            htmlFor={`${proposal.key}-${index}`}
+                                                                            className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                                        >
+                                                                            {option}
+                                                                        </label>
+                                                                    </div>
+                                                                    <span className="text-xs text-muted-foreground">
                                                                                 {proposal.optionVotes[index].toLocaleString()}
                                                                             </span>
-                                                                        </div>
-                                                                    ))}
-                                                                </RadioGroup>
-                                                            </div>
-                                                            <div className="flex gap-4">
-                                                                <Link href={proposal.link} target="_blank" className="w-full">
-                                                                    <Button
-                                                                        variant="default"
-                                                                        size="sm"
-                                                                        className="bg-background hover:bg-muted text-foreground shadow-none w-full"
-                                                                    >
-                                                                        View Full Details
-                                                                    </Button>
-                                                                </Link>
+                                                                </div>))}
+                                                            </RadioGroup>
+                                                        </div>
+                                                        <div className="flex gap-4">
+                                                            <Link href={proposal.link} target="_blank" className="w-full">
                                                                 <Button
                                                                     variant="default"
                                                                     size="sm"
-                                                                    disabled={!selectedVotes[proposal.key] || status !== 'ongoing'}
-                                                                    className="text-foreground dark:text-background shadow-none w-full"
+                                                                    className="bg-background hover:bg-muted text-foreground shadow-none w-full"
                                                                 >
-                                                                    Override Vote
+                                                                    View Full Details
                                                                 </Button>
-                                                            </div>
+                                                            </Link>
+                                                            <Button
+                                                                variant="default"
+                                                                size="sm"
+                                                                disabled={!selectedVotes[proposal.key] || status !== 'ongoing'}
+                                                                className="text-foreground dark:text-background shadow-none w-full"
+                                                            >
+                                                                Override Vote
+                                                            </Button>
                                                         </div>
-                                                    </AccordionContent>
-                                                </div>
-                                            </AccordionItem>
-                                        );
+                                                    </div>
+                                                </AccordionContent>
+                                            </div>
+                                        </AccordionItem>);
                                     })}
-                                </Accordion>
-                            )}
-                        </div>
-                        <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-card to-transparent pointer-events-none" />
-                    </ScrollArea>
-                </CardContent>
+                                </Accordion>)}
+                            </div>
+                            <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-card to-transparent pointer-events-none"/>
+                        </ScrollArea>
+                    </CardContent>
+                </div>
             </Card>
-        </div>
+</div>
     );
 }
