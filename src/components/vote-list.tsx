@@ -293,7 +293,7 @@ export default function VoteList() {
                                                                 </div>
                                                             </div>
                                                         ) : (
-                                                            <AccordionTrigger className="px-3 py-2 hover:no-underline [&[data-state=open]>div]:rounded-b-none">
+                                                            <AccordionTrigger className="select-none px-3 py-2 hover:no-underline [&[data-state=open]>div]:rounded-b-none">
                                                                 <div className="flex items-center justify-between gap-x-4 w-full">
                                                                     <div className="flex-1 min-w-0">
                                                                         <h3
@@ -321,6 +321,7 @@ export default function VoteList() {
                                                                                 </TooltipTrigger>
                                                                                 <TooltipContent className="bg-background border text-foreground border-border">
                                                                                     <p className="text-xs">
+
                                                                                         <span className="font-bold">Start:</span>{' '}
                                                                                         {formatDate(proposal.activatedAt)}
                                                                                     </p>
@@ -369,20 +370,21 @@ export default function VoteList() {
                                                                                     ...prev, [proposal.key]: value
                                                                                 }));
                                                                             }}
-                                                                            className="space-y-2 mb-6"
+                                                                            className={`space-y-2 mb-6 ${status === 'ongoing' ? 'cursor-pointer' : '[&:disabled]:cursor-default'}`}
                                                                             disabled={status !== 'ongoing'}
                                                                         >
                                                                             {optionsWithVotes.map((optionData) => (
                                                                                 <div key={optionData.index} className="flex items-center justify-between space-x-2">
                                                                                     <div className="flex items-center space-x-2">
                                                                                         <RadioGroupItem
+                                                                                            className={status === 'ongoing' ? 'cursor-pointer' : 'cursor-default'}
                                                                                             value={optionData.index.toString()}
                                                                                             id={`${proposal.key}-${optionData.index}`}
                                                                                             disabled={status !== 'ongoing'}
                                                                                         />
                                                                                         <label
                                                                                             htmlFor={`${proposal.key}-${optionData.index}`}
-                                                                                            className="text-sm font-normal leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                                                                                            className="text-sm font-normal leading-none peer-disabled:cursor-default peer-disabled:opacity-70"
                                                                                         >
                                                                                             {optionData.option}
                                                                                         </label>
