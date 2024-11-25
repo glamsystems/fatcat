@@ -218,7 +218,7 @@ export default function VoteList() {
                         {/*    <ToggleGroupItem value="all" aria-label="Show all proposals">All</ToggleGroupItem>*/}
                         {/*    <ToggleGroupItem value="active" aria-label="Show active proposals">Active</ToggleGroupItem>*/}
                         {/*</ToggleGroup>*/}
-                        <ScrollArea className="h-[480px] w-full rounded overflow-hidden">
+                        <ScrollArea className="h-[600px] w-full rounded overflow-hidden">
                             <div className="pb-20">
                                 {isLoading ? (
                                     <div className="h-full w-full flex flex-row items-center justify-center py-4">
