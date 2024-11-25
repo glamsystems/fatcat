@@ -105,11 +105,16 @@ const fetchProposals = async (): Promise<Proposal[]> => {
 };
 
 const getProposalStatus = (
-    activatedAt: string,
-    votingEndsAt: string,
+    activatedAt: string | null,
+    votingEndsAt: string | null,
     canceledAt: string | null
 ): ProposalStatus => {
     if (canceledAt) return 'canceled';
+
+    // If activatedAt and votingEndsAt are null, but we have a proposal (with createdAt),
+    // then it's an upcoming proposal
+    if (!activatedAt || !votingEndsAt) return 'upcoming';
+
     const now = Date.now();
     const activationDate = new Date(activatedAt).getTime();
     const endDate = new Date(votingEndsAt).getTime();
