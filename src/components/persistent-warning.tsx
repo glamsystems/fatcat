@@ -29,7 +29,7 @@ export function PersistentWarning() {
 
     return (
         <>
-            <Card className="fixed rounded bottom-4 right-4 z-50 p-4 shadow-lg border-muted max-w-sm">
+            <Card className="fixed rounded bottom-4 right-4 z-50 p-4 shadow-lg border-muted max-w-sm select-none">
                 <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4">
                     <div className="flex items-center space-x-2">
                         {/*<BeakerIcon className="h-6 w-6 text-destructive flex-shrink-0" />*/}
@@ -50,7 +50,7 @@ export function PersistentWarning() {
             </Card>
 
             <Dialog open={isDialogOpen} onOpenChange={() => {}} modal={true}>
-                <DialogContent className="sm:max-w-[425px] outline-none outline-transparent border-muted">
+                <DialogContent className="sm:max-w-[425px] outline-none outline-transparent border-muted select-none">
                     <DialogHeader>
                         <DialogTitle>Full Disclaimer</DialogTitle>
                         <DialogDescription>

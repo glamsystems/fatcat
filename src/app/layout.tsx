@@ -39,7 +39,7 @@ export default function RootLayout({
             <link rel="manifest" href="/manifest.json"/>
         </head>
         <body
-            className={cn(GeistSans.className, "min-h-screen bg-background antialiased")}
+            className={cn(GeistSans.className, "min-h-screen bg-background antialiased select-none")}
         >
         <Analytics/>
         <WalletAdapterProvider>
