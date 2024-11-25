@@ -147,7 +147,7 @@ export default function DelegateForm() {
                                     <div className="space-y-2">
                                         <Label>Claimable JUP</Label>
                                         <div className="relative">
-                                            <ScrollArea className="h-[210px] w-full rounded p-4">
+                                            <ScrollArea className="h-[180px] sm:h-[210px] w-full rounded p-4">
                                                 {unstakeItems.length === 0 ? (<p className="text-center text-muted-foreground">No unstaking in progress.</p>) : (unstakeItems.map((item, index) => (<div key={index} className="rounded mb-2 last:mb-16">
                                                     <div className="flex justify-between items-center">
                                                         <span className="w-full text-sm sm:text-base">{item.amount} JUP</span>
