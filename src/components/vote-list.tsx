@@ -379,7 +379,7 @@ export default function VoteList() {
                                                                             disabled={status !== 'ongoing'}
                                                                         >
                                                                             {optionsWithVotes.map((optionData) => (
-                                                                                <div key={optionData.index} className="flex items-start justify-between space-x-2 flex-col sm:flex-row">
+                                                                                <div key={optionData.index} className="flex items-center justify-between space-x-2 flex-col sm:flex-row">
                                                                                     <div className="flex items-center space-x-2">
                                                                                         <RadioGroupItem
                                                                                             className={status === 'ongoing' ? '' : 'pointer-events-none'}
@@ -389,12 +389,26 @@ export default function VoteList() {
                                                                                         />
                                                                                         <label
                                                                                             htmlFor={`${proposal.key}-${optionData.index}`}
-                                                                                            className="text-sm font-normal leading-none peer-disabled:cursor-default peer-disabled:opacity-70 select-none"
+                                                                                            className="w-56 text-sm font-normal  peer-disabled:cursor-default peer-disabled:opacity-70 select-none truncate"
                                                                                         >
                                                                                             {optionData.option}
+                                                                                    {/*        <TooltipProvider>*/}
+                                                                                    {/*            <Tooltip>*/}
+                                                                                    {/*                <TooltipTrigger asChild>*/}
+                                                                                    {/*<span>*/}
+                                                                                    {/*    {optionData.option}*/}
+                                                                                    {/*</span>*/}
+                                                                                    {/*                </TooltipTrigger>*/}
+
+                                                                                    {/*                <TooltipContent className="bg-background text-foreground border border-border">*/}
+                                                                                    {/*                    {optionData.option}*/}
+                                                                                    {/*                </TooltipContent>*/}
+                                                                                    {/*            </Tooltip>*/}
+                                                                                    {/*        </TooltipProvider>*/}
+
                                                                                         </label>
                                                                                     </div>
-                                                                                    <span className="text-xs text-muted-foreground select-none font-mono opacity-0 sm:opacity-100">
+                                                                                    <span className="text-xs text-muted-foreground select-none font-mono opacity-0 sm:opacity-100 text-nowrap">
                                                                                         {Number(optionData.votes.toFixed(OPTION_VOTE_DECIMALS)).toLocaleString()} ({optionData.percentage}%)
                                                                                     </span>
                                                                                 </div>
