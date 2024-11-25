@@ -28,7 +28,6 @@ export default function Home() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, ease: "linear" }}
         >
-            <Header />
             <main className="flex-grow flex flex-col items-center justify-start p-4 sm:p-8 md:p-8 lg:p-4 mt-24 md:mt-32">
                 <div className="flex flex-col items-center justify-center space-y-8 md:space-y-4 max-w-6xl w-full">
                     {/*<h1 className="text-2xl sm:text-3xl md:text-4xl text-center opacity-90">Welcome to FatCat</h1>*/}

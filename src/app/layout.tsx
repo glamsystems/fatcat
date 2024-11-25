@@ -7,6 +7,7 @@ import { cn } from "../lib/utils";
 import {PersistentWarning} from "../components/persistent-warning";
 import { GeistSans } from 'geist/font/sans';
 import { Analytics } from "@vercel/analytics/react"
+import Header from "../components/header";
 
 
 export const metadata: Metadata = {
@@ -50,6 +51,7 @@ export default function RootLayout({
                     enableSystem
                     disableTransitionOnChange
                 >
+                    <Header/>
                     {children}
                     <PersistentWarning/>
                 </ThemeProviderWrapper>

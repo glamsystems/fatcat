@@ -5,7 +5,8 @@ import ThemeSwitcher from "./themeSwitcher";
 import Link from 'next/link'
 import {Button} from "@/components/ui/button";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
-import { EllipsisVerticalIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
+import { AdjustmentsHorizontalIcon, EllipsisVerticalIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 const WalletMultiButtonDynamic = dynamic(
     async () =>
@@ -14,6 +15,8 @@ const WalletMultiButtonDynamic = dynamic(
 );
 
 const Header = () => {
+    const { connected } = useWallet();
+
     return (
         <header className="w-full fixed bg-gradient-to-t from-transparent to-background z-50">
             <div className="max-w-5xl mx-auto px-4 py-12 md:py-10 flex items-center justify-between">
@@ -41,6 +44,13 @@ const Header = () => {
                                     <EnvelopeIcon/>
                                 </Button>
                             </Link>
+                            {connected && (
+                                <Link href="/settings">
+                                    <Button className="w-12 h-12 rounded focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0" variant="outline">
+                                        <AdjustmentsHorizontalIcon/>
+                                    </Button>
+                                </Link>
+                            )}
                             <ThemeSwitcher />
                         </PopoverContent>
                     </Popover>
