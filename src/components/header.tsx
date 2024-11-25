@@ -7,6 +7,7 @@ import {Button} from "@/components/ui/button";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import { AdjustmentsHorizontalIcon, EllipsisVerticalIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 import { useWallet } from "@solana/wallet-adapter-react";
+import {SettingsDialog} from "@/components/settings-dialog";
 
 const WalletMultiButtonDynamic = dynamic(
     async () =>
@@ -45,11 +46,7 @@ const Header = () => {
                                 </Button>
                             </Link>
                             {connected && (
-                                <Link href="/settings">
-                                    <Button className="w-12 h-12 rounded focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0" variant="outline">
-                                        <AdjustmentsHorizontalIcon/>
-                                    </Button>
-                                </Link>
+                                <SettingsDialog />
                             )}
                             <ThemeSwitcher />
                         </PopoverContent>
