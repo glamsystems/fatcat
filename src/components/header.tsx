@@ -36,13 +36,11 @@ const Header = () => {
                                     @
                                 </Button>
                             </Link>
-
                             <Link href="mailto:help@fatcat.vote?subject=FatCat Support Ticket" target="_blank">
                                 <Button className="w-12 h-12 rounded" variant="outline">
                                     <EnvelopeIcon/>
                                 </Button>
                             </Link>
-
                             <ThemeSwitcher />
                         </PopoverContent>
                     </Popover>
