@@ -341,7 +341,7 @@ export default function VoteList() {
                                                                                 </TooltipTrigger>
 
                                                                                 <TooltipContent className="bg-background text-foreground border border-border">
-                                                                                    Not voted yet
+                                                                                    Not voted
                                                                                 </TooltipContent>
                                                                             </Tooltip>
                                                                         </TooltipProvider>
