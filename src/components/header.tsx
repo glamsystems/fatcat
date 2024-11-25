@@ -26,18 +26,18 @@ const Header = () => {
                     <WalletMultiButtonDynamic />
                     <Popover>
                         <PopoverTrigger asChild>
-                            <div className="w-12 h-12 rounded cursor-pointer hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center border border-input bg-background shadow-sm">
+                            <div className="w-12 h-12 rounded cursor-pointer hover:bg-accent hover:text-accent-foreground inline-flex items-center justify-center border border-input bg-background shadow-sm focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0">
                                 <EllipsisVerticalIcon className="h-4 w-4"/>
                             </div>
                         </PopoverTrigger>
-                        <PopoverContent className="flex flex-col w-fit gap-y-4 shadow-none bg-transparent border-none">
+                        <PopoverContent className="flex flex-col w-fit gap-y-4 shadow-none bg-transparent border-none ">
                             <Link href="https://x.com/fatcatvote" target="_blank">
-                                <Button className="w-12 h-12 rounded" variant="outline">
+                                <Button className="w-12 h-12 rounded focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0" variant="outline">
                                     @
                                 </Button>
                             </Link>
                             <Link href="mailto:help@fatcat.vote?subject=FatCat Support Ticket" target="_blank">
-                                <Button className="w-12 h-12 rounded" variant="outline">
+                                <Button className="w-12 h-12 rounded focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0" variant="outline">
                                     <EnvelopeIcon/>
                                 </Button>
                             </Link>

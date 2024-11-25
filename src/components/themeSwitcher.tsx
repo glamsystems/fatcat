@@ -25,7 +25,7 @@ const ThemeSwitcher = () => {
       <Button
           size="icon"
           variant="outline"
-          className="h-12 w-12 rounded"
+          className="h-12 w-12 rounded focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-ring focus-visible:ring-offset-0"
           onClick={() => setTheme(resolvedTheme === "light" ? "dark" : "light")}
           aria-label={`Switch to ${resolvedTheme === "light" ? "dark" : "light"} theme`}
       >
