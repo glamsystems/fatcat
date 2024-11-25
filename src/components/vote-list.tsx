@@ -195,7 +195,7 @@ export default function VoteList() {
 
     return (
         <div className="w-full max-w-xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
-            <Card className="select-none text-card-foreground p-4 rounded border-muted">
+            <Card className="select-none text-card-foreground p-0 sm:p-4 rounded border-muted">
                 <div className="p-6">
                     <CardHeader className="p-0 pb-4">
                         <CardTitle className="text-xl mb-1">Proposals</CardTitle>
@@ -218,7 +218,7 @@ export default function VoteList() {
                         {/*    <ToggleGroupItem value="all" aria-label="Show all proposals">All</ToggleGroupItem>*/}
                         {/*    <ToggleGroupItem value="active" aria-label="Show active proposals">Active</ToggleGroupItem>*/}
                         {/*</ToggleGroup>*/}
-                        <ScrollArea className="h-[600px] w-full rounded overflow-hidden">
+                        <ScrollArea className="h-[600px] rounded w-full">
                             <div className="pb-20">
                                 {isLoading ? (
                                     <div className="h-full w-full flex flex-row items-center justify-center py-4">
@@ -232,7 +232,7 @@ export default function VoteList() {
                                 ) : filteredProposals.length === 0 ? (
                                     <p className="text-center text-muted-foreground py-4">No active or upcoming proposals.</p>
                                 ) : (
-                                    <Accordion type="single" collapsible className="space-y-2">
+                                    <Accordion type="single" collapsible className="space-y-2 w-full">
                                         {filteredProposals.map((proposal) => {
                                             const status = getProposalStatus(proposal.activatedAt, proposal.votingEndsAt, proposal.canceledAt);
 
@@ -256,10 +256,10 @@ export default function VoteList() {
                                                     <div className="bg-accent rounded-lg">
                                                         {status === 'canceled' ? (
                                                             <div className="px-3 py-2">
-                                                                <div className="flex items-center justify-between gap-x-4 w-full">
+                                                                <div className="flex items-center justify-between gap-x-4">
                                                                     <div className="flex-1 min-w-0">
                                                                         <h3
-                                                                            className="select-none font-semibold max-w-48 text-base truncate text-left text-muted-foreground"
+                                                                            className="select-none font-semibold max-w-28 sm:max-w-48 text-base truncate text-left text-muted-foreground"
                                                                         >
                                                                             {proposal.title || DEFAULT_PROPOSAL.title}
                                                                         </h3>
@@ -297,7 +297,7 @@ export default function VoteList() {
                                                                 <div className="flex items-center justify-between gap-x-4 w-full">
                                                                     <div className="flex-1 min-w-0">
                                                                         <h3
-                                                                            className="select-none font-semibold max-w-48 text-base truncate text-left transition-all group-data-[state=open]:opacity-10"
+                                                                            className="select-none font-semibold max-w-28 sm:max-w-48 text-base truncate text-left transition-all group-data-[state=open]:opacity-10"
                                                                         >
                                                                             {proposal.title || DEFAULT_PROPOSAL.title}
                                                                         </h3>
@@ -374,7 +374,7 @@ export default function VoteList() {
                                                                             disabled={status !== 'ongoing'}
                                                                         >
                                                                             {optionsWithVotes.map((optionData) => (
-                                                                                <div key={optionData.index} className="flex items-center justify-between space-x-2">
+                                                                                <div key={optionData.index} className="flex items-start justify-between space-x-2 flex-col sm:flex-row">
                                                                                     <div className="flex items-center space-x-2">
                                                                                         <RadioGroupItem
                                                                                             className={status === 'ongoing' ? '' : 'pointer-events-none'}
@@ -389,14 +389,14 @@ export default function VoteList() {
                                                                                             {optionData.option}
                                                                                         </label>
                                                                                     </div>
-                                                                                    <span className="text-xs text-muted-foreground select-none font-mono">
+                                                                                    <span className="text-xs text-muted-foreground select-none font-mono opacity-0 sm:opacity-100">
                                                                                         {Number(optionData.votes.toFixed(OPTION_VOTE_DECIMALS)).toLocaleString()} ({optionData.percentage}%)
                                                                                     </span>
                                                                                 </div>
                                                                             ))}
                                                                         </RadioGroup>
                                                                     </div>
-                                                                    <div className="flex gap-4">
+                                                                    <div className="flex gap-4 flex-col sm:flex-row">
                                                                         <Link href={proposal.link} target="_blank" className="w-full">
                                                                             <Button
                                                                                 variant="default"
